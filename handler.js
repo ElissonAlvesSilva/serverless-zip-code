@@ -1,6 +1,7 @@
 'use strict';
 
 const axios = require('axios');
+const auth = require('./auth');
 
 const hello = async event => {
   return {
@@ -19,6 +20,17 @@ const hello = async event => {
 
 const getAddress = async event => {
   const { zip } = event.pathParameters;
+  const { Authorization } = event.headers;
+  const authorize = auth(Authorization);
+  if (!authorize) {
+    return {
+      statusCode: 403,
+      body: JSON.stringify({
+        message: 'Unauthorize'
+      })
+    };
+  }
+
   try {
     const response = await axios(`https://viacep.com.br/ws/${zip}/json/`);
     return {
