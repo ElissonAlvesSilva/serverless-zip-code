@@ -1,0 +1,19 @@
+service: sls-node
+
+provider:
+  name: aws
+  stage: dev
+  runtime: nodejs12.x
+
+functions:
+  hello:
+    handler: handler.hello
+  get-address:
+    handler: handler.getAddress
+    events:
+      - http:
+          path: getAddress/{zip}
+          method: get
+
+plugins:
+  - serverless-offline
